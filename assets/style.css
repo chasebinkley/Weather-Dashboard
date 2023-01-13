@@ -1,0 +1,11 @@
+body {
+    background-image: url('/background image.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  }
+  .header {
+    color: whitesmoke;
+    font-size: 55px;
+    text-align: center;
+  }
