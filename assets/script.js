@@ -12,17 +12,17 @@ function initPage() {
     var fivedayEl = document.getElementById("fiveday-header");
     var todayweatherEl = document.getElementById("today-weather");
     let searchHistory = JSON.parse(localStorage.getItem("search")) || [];
-
+     // This assigns my API key to the variable
     const APIKey = "2c3ae6ed8bd8709b066bf3de84be5f4b";
-
+    
     function getWeather(cityName) {
-
+        // Get request from the open weather api
         let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=" + APIKey;
         axios.get(queryURL)
             .then(function (response) {
 
                 todayweatherEl.classList.remove("d-none");
-
+                // This gives the user the current date and attributes of the weather
                 const currentDate = new Date(response.data.dt * 1000);
                 const day = currentDate.getDate();
                 const month = currentDate.getMonth() + 1;
@@ -34,7 +34,7 @@ function initPage() {
                 currentTempEl.innerHTML = "Temperature: " + k2f(response.data.main.temp) + " &#176F";
                 currentHumidityEl.innerHTML = "Humidity: " + response.data.main.humidity + "%";
                 currentWindEl.innerHTML = "Wind Speed: " + response.data.wind.speed + " MPH";
-
+                // UV index because why not
                 let lat = response.data.coord.lat;
                 let lon = response.data.coord.lon;
                 let UVQueryURL = "https://api.openweathermap.org/data/2.5/uvi/forecast?lat=" + lat + "&lon=" + lon + "&appid=" + APIKey + "&cnt=1";
@@ -46,7 +46,7 @@ function initPage() {
                         currentUVEl.innerHTML = "UV Index: ";
                         currentUVEl.append(UVIndex);
                     });
-
+                    // 5 day forecast for searched city
                 let cityID = response.data.id;
                 let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityID + "&appid=" + APIKey;
                 axios.get(forecastQueryURL)
@@ -65,7 +65,7 @@ function initPage() {
                             forecastDateEl.setAttribute("class", "mt-3 mb-0 forecast-date");
                             forecastDateEl.innerHTML = forecastMonth + "/" + forecastDay + "/" + forecastYear;
                             forecastEls[i].append(forecastDateEl);
-
+                            // This gives the icon for the current weather
                             const forecastWeatherEl = document.createElement("img");
                             forecastWeatherEl.setAttribute("src", "https://openweathermap.org/img/wn/" + response.data.list[forecastIndex].weather[0].icon + "@2x.png");
                             forecastWeatherEl.setAttribute("alt", response.data.list[forecastIndex].weather[0].description);
@@ -80,7 +80,7 @@ function initPage() {
                     });
             });
     };
-
+    // This will access saved searches in local storage
     searchEl.addEventListener("click", function () {
         const searchTerm = cityEl.value;
         getWeather(searchTerm);
@@ -88,7 +88,7 @@ function initPage() {
         localStorage.setItem("search", JSON.stringify(searchHistory));
         renderSearchHistory();
     });
-
+    // This will clear history in local storage
     clearEl.addEventListener("click", function () {
         localStorage.clear();
         searchHistory = [];
